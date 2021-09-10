@@ -7,4 +7,4 @@ For Youngstown State University's Software Engineering Course (CSCI 5801), our p
 
 **Engineers:** Alyssa Guglielmetti, Caroline Snyder, Dylan Straley
 
-**Customer Service Representative:** Nicole Zimmerman
+**Customer Service Representative:** Nicole Zimmerman, Robert Malizia
