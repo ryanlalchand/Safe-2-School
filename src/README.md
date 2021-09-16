@@ -1,1 +1,1 @@
-The home for our source code; helps keep the project organized. Feel free to add subdirectories for language-specific or task-specific files!
+The home for our source code; helps keep the project organized. Feel free to add subdirectories for language-specific or task-specific files! 
