@@ -5,6 +5,8 @@ For Youngstown State University's Software Engineering Course (CSCI 5801), our p
 ## The Team
 **Project Manager:** Ryan Lalchand
 
-**Engineers:** Alyssa Guglielmetti, Caroline Snyder, Dylan Straley
+**Programming Engineers:** Alyssa Guglielmetti, Caroline Snyder, Dylan Straley, Nicole Zimmerman
 
-**Customer Service Representative:** Nicole Zimmerman, Robert Malizia
+**Testing Engineers:** Alyssa Guglielmetti, Caroline Snyder
+
+**Customer Service Representatives:** Robert Malizia, Nicole Zimmerman
