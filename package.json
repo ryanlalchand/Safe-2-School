@@ -1,0 +1,23 @@
+{
+  "name": "Group_Project_5801",
+  "version": "1.0.0",
+  "description": "For Youngstown State University's Software Engineering Course (CSCI 5801), our project idea is to create a system for tracking students' pick-up and drop-off times and geolocations on their busing routes. The plan is to give children QR codes that they cannot easily lose (e.g., sewn into their backpacks) that the bus drivers can scan on their phones using our Progressive Web App (PWA). This will allow location detection to detect the coordinates of the pick-up or drop-off, and automatically record the time that it occurred. We will allow drivers and school staff to log in to make record of who last saw the child. This could also be extended to school, daycare, or extracurricular staff so that there is confirmation by an adult that the children were not only safely dropped off, but also received by an authority figure. School administrators would have an admin login on the website to ensure that all students were received and their whereabouts accounted for.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanlalchand/Group-Project-5801.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ryanlalchand/Group-Project-5801/issues"
+  },
+  "homepage": "https://github.com/ryanlalchand/Group-Project-5801#readme",
+  "dependencies": {
+    "qrious": "^4.0.2"
+  }
+}
