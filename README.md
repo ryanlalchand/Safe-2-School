@@ -16,9 +16,9 @@ For Youngstown State University's Software Engineering Course (CSCI 5801), our p
 ## Acknowledgements
 Dr. Feng Yu for the project idea
 
-[This QR Code Generator](https://github.com/neocotic/qrious)
+[This QR Code Generator](https://www.npmjs.com/package/qrious)
 
-[This QR Code Scanner](https://github.com/gokulkrishh/qrcodescan.in)
+[This QR Code Scanner](https://www.npmjs.com/package/qr-scanner)
 
 
 ## Setup

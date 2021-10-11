@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ryanlalchand/Group-Project-5801#readme",
   "dependencies": {
+    "qr-scanner": "^1.3.0",
     "qrious": "^4.0.2"
   }
 }
