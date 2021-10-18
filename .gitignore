@@ -1,4 +1,4 @@
-#this is where you can put files that you don't want to actually get uploaded to github, hence git ignores them
+#this is where you can put files that you don't want to actually get uploaded to github - git ignores them
 #for example, the database config file that Caroline will add has a special section at the top
 #template created at gitignore.io using the values windows,macos,visualstudio,visualstudiocode,node
 
