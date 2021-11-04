@@ -1,7 +1,7 @@
 //required includes here
-const express = require('express');
 //const mongoose = require('mongoose');
 const config = require('./config/dev');
+const pwManage = require('./passwordmanage')
 const MongoClient = require('mongodb').MongoClient;
 //schemas for db here
 const Driver = require('./models/driver');
@@ -9,8 +9,6 @@ const Student = require('./models/students');
 const Admin = require('./models/admin');
 const fs = require('fs');
 //test includes here
-
-
 
 //notes 
 //updating / updated all functions to be asynchronous
@@ -24,29 +22,7 @@ const fs = require('fs');
 //passwords ?? some type on encryption not a live service atm so no big deal?
 
 class Database {
-    constructor() {
-        //dont use this causes too many issues with async functions and promise returns
-        //on creation of database object connect to db and run through and make connection
-        ///  mongoose.connect(config.DB_URI, { useNewUrlParser: true }).then(() => {
-
-        //const fakeDb = new FakeDb();
-        // fakeDb.seedDb();
-
-        //  });
-
-        //  const app = express();
-
-        //  app.get('/users', function(req, res) {
-        //      res.json({ "success": true });
-        //  });
-
-        //   const PORT = process.env.PORT || 3001;
-        ///  
-        //  app.listen(PORT, function() {
-        //      console.log("Node Server is Running");
-        //  });
-    }
-
+    constructor() {}
 
     //push students 
     //js you cannot overload functions
@@ -126,7 +102,6 @@ class Database {
         }
     }
 
-
     //query singular student
     //tested works
     async findStudent(namein) {
@@ -166,7 +141,6 @@ class Database {
         }
     }
 
-
     //
     //query all student
     //this will flash a json file at you probably best to put into a string t
@@ -185,8 +159,10 @@ class Database {
         }
 
         try {
+            const db = client.db("test");
 
-            for await (const doc of Student.find()) {
+            let collection = db.collection('students');
+            for await (const doc of collection.find()) {
                 buildstring = "Name: " + doc.name + " Location: " + doc.location + "\n" + buildstring;
                 // Prints documents one at a time
             }
@@ -202,7 +178,6 @@ class Database {
         }
     }
 
-
     //dangerous function drops entire collection without warning
     //logs to backup log file in straight text format 
     //maybe shift to exporting a json?
@@ -216,8 +191,11 @@ class Database {
         }
 
         try {
+            const db = client.db("test");
 
-            for await (const doc of Student.find()) {
+            let collection = db.collection('students');
+            for await (const doc of collection.find()) {
+
                 buildstring = "Name: " + doc.name + " Location: " + doc.location + "\n" + buildstring;
                 // Prints documents one at a time
             }
@@ -238,8 +216,11 @@ class Database {
             } catch (err) {
                 console.log(err)
             } finally {
+
                 console.log("log file created")
-                Student.collection.deleteMany();
+                const db = client.db("test");
+                let collection = db.collection('students');
+                await collection.deleteMany();
                 console.log("Student Collection Cleared")
                 client.close();
             }
@@ -282,7 +263,7 @@ class Database {
 
     //add administrators
     //tested works
-    async pushAdmin(namein, fullage, curloc) {
+    async pushAdmin(namein, fullage, user, password) {
             const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
                 .catch(err => { console.log(err); });
 
@@ -292,11 +273,15 @@ class Database {
 
             try {
 
+                const pw = await new pwManage();
+
+                var passHex = await pw.passSet(password);
+
                 const db = client.db("test");
 
                 let collection = db.collection('admins');
 
-                let query = { name: namein, age: fullage, location: curloc }
+                let query = { name: namein, age: fullage, username: user, password: passHex }
 
                 let res = await collection.insertOne(query);
 
@@ -315,7 +300,7 @@ class Database {
         }
         //remove administrators from
         //tested works
-    async removeAdmin(namein) {
+    async removeAdmin(user) {
             const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
                 .catch(err => { console.log(err); });
 
@@ -329,7 +314,7 @@ class Database {
 
                 let collection = db.collection('admins');
 
-                let query = { name: namein }
+                let query = { user: user }
 
                 let res = await collection.findOneAndDelete(query);
 
@@ -345,7 +330,7 @@ class Database {
         }
         //query admins
         //tested works
-    async findAdmin(namein) {
+    async findAdmin(user) {
         var buildstring;
         const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
             .catch(err => { console.log(err); });
@@ -360,12 +345,11 @@ class Database {
 
             let collection = db.collection('admins');
 
-            let query = { name: namein }
+            let query = { user: user }
 
             let res = await collection.findOne(query);
 
-            buildstring = " Name: " + res.name + " Age: " + res.age +
-                " Location: " + res.location; //+ " Phone Number: " + 
+            buildstring = " Name: " + res.name + " Age: " + res.age; //+ " Phone Number: " + 
             //res.phonenumber + " url: " + res.url + " First Drop: " + res.dropoffAM
             // + " Second Drop: " + res.dropoffPM;
 
@@ -382,24 +366,118 @@ class Database {
         }
     }
 
+    async updateAdmin(namein, fullage, username, password) {
+        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
+            .catch(err => { console.log(err); });
+
+        if (!client) {
+            return;
+        }
+
+        try {
+
+
+            const pw = await new pwManage();
+
+            var passHex = await pw.passSet(password);
+
+            const db = client.db("test");
+
+            let collection = db.collection('admins');
+
+            let query = { user: user }
+
+            let update = { name: namein, age: fullage, user: username, password: passHex }
+
+            let res = await collection.findOneAndReplace(query, update);
+
+        } catch (err) {
+
+            console.log(err);
+        } finally {
+
+            client.close();
+            console.log("updated " + namein)
+        }
+    }
+
+    async adminLogIn(user, password) {
+        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
+            .catch(err => { console.log(err); });
+
+        var passBool
+
+        if (!client) {
+            return;
+        }
+
+        try {
+
+            const pw = await new pwManage();
+
+            const db = client.db("test");
+
+            let collection = db.collection('admins');
+
+            let query = { username: user }
+
+            let res = await collection.findOne(query);
+
+            passBool = await pw.validPassword(password, res.password)
+
+
+
+        } catch (err) {
+            passBool = false;
+        } finally {
+
+            client.close();
+            return passBool
+        }
+
+    }
+
     //add drivers
-    pushDriver(fullname, fullage, curloc) {
-            console.log("updating drivers");
-            //grab from schema files
-            var DriverInfo = mongoose.model('Driver')
-                //take info coming in from call put into var
-            var info = new DriverInfo({ name: fullname, age: fullage, location: curloc });
-            //save to database
-            info.save(function(err, Driver) {
-                if (err) return console.error(err);
-                console.log(info.name + " saved to collection.");
-            });
+    async pushDriver(fullname, fullage, username, password) {
+            const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
+                .catch(err => { console.log(err); });
+
+            if (!client) {
+                return;
+            }
+
+            try {
+
+                const pw = await new pwManage();
+
+                var passHex = await pw.passSet(password);
+
+                const db = client.db("test");
+
+                let collection = db.collection('drivers');
+
+                let query = { name: fullname, age: fullage, username: username, password: passHex }
+
+                let res = await collection.insertOne(query);
+
+                console.log("user added")
+
+            } catch (err) {
+
+                console.log(err);
+            } finally {
+
+                client.close();
+
+            }
+
+
 
 
         }
         //remove drivers from
         //tested works
-    async removeDriver(namein) {
+    async removeDriver(user) {
             const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
                 .catch(err => { console.log(err); });
 
@@ -413,7 +491,7 @@ class Database {
 
                 let collection = db.collection('drivers');
 
-                let query = { name: namein }
+                let query = { user: user }
 
                 let res = await collection.findOneAndDelete(query);
 
@@ -429,7 +507,7 @@ class Database {
         }
         //query drivers
         //tested works
-    async findDriver(namein) {
+    async findDriver(user) {
         var buildstring;
         const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
             .catch(err => { console.log(err); });
@@ -444,12 +522,11 @@ class Database {
 
             let collection = db.collection('drivers');
 
-            let query = { name: namein }
+            let query = { user: user }
 
             let res = await collection.findOne(query);
 
-            buildstring = " Name: " + res.name + " Age: " + res.age +
-                " Location: " + res.location; //+ " Phone Number: " + 
+            buildstring = " Name: " + res.name + " Age: " + res.age; //+ " Phone Number: " + 
             //res.phonenumber + " url: " + res.url + " First Drop: " + res.dropoffAM
             // + " Second Drop: " + res.dropoffPM;
 
@@ -468,7 +545,7 @@ class Database {
 
     //updates a student document based on name atm
     //needs to be supplied with all fields for everything to update
-    async updateDriver(namein, fullage, curloc) {
+    async updateDriver(namein, fullage, username, password) {
         const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
             .catch(err => { console.log(err); });
 
@@ -478,13 +555,18 @@ class Database {
 
         try {
 
+
+            const pw = await new pwManage();
+
+            var passHex = await pw.passSet(password);
+
             const db = client.db("test");
 
             let collection = db.collection('drivers');
 
-            let query = { name: namein }
+            let query = { user: user }
 
-            let update = { name: namein, age: fullage, location: curloc }
+            let update = { name: namein, age: fullage, username: username, password: passHex }
 
             let res = await collection.findOneAndReplace(query, update);
 
@@ -496,6 +578,41 @@ class Database {
             client.close();
             console.log("updated " + namein)
         }
+    }
+
+    async driverLogIn(username, password) {
+        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
+            .catch(err => { console.log(err); });
+
+        var passBool
+
+        if (!client) {
+            return;
+        }
+
+        try {
+
+            const pw = await new pwManage();
+
+            const db = client.db("test");
+
+            let collection = db.collection('drivers');
+
+            let query = { username: username }
+
+            let res = await collection.findOne(query);
+
+            passBool = await pw.validPassword(password, res.password)
+
+        } catch (err) {
+
+            passBool = false;
+        } finally {
+
+            client.close();
+            return passBool
+        }
+
     }
 
 }
