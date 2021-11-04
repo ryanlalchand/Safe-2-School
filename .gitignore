@@ -8,7 +8,6 @@
 #unnecessary since you need to run npm install anyway
 package-lock.json
 
-
 ### macOS ###
 # General
 .DS_Store
