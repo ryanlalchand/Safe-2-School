@@ -5,8 +5,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,visualstudio,visualstudiocode,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,visualstudio,visualstudiocode,node
 
-#enter database config file here
-
+#unnecessary since you need to run npm install anyway
+package-lock.json
 
 ### macOS ###
 # General

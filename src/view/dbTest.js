@@ -1,5 +1,6 @@
 const Database = require('../db')
 
+
 async function populateDB() {
     const db = await new Database();
     //comment these out once youve added them once so you dont have a bunch of dupes
@@ -20,5 +21,5 @@ async function populateDB() {
     console.log("Admin Password's match?: " + await db.adminLogIn("RSone1965", "ILIKEEmyJobaTON23"));
 
 }
+createDB();
 
-populateDB();
