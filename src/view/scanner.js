@@ -5,31 +5,37 @@
 //using qrcodescan.in as inspiration
 //use html geolocation upon scan event
 
-//imports QRScanner
-import QrScanner from 'node_modules/qr-scanner';
-//Sets worker path
-QrScanner.WORKER_PATH = 'node_modules/qr-scanner/qr-scanner-worker.min.js';
-
-//Creates QRScanner instance
-const qrScanner = new QrScanner(videoElem, result 
-    => console.log('decoded qr code:', result, QrScanner._onDecodeError));
-
 //web cam video stream should get rendered here
-<video></video>
+var videoElem = "<html><video></video></html>";
 
-//possibly look into Single image scanning instead of video
-//if camera, scan
-qrScanner.hasCamera();
-qrScanner.setCamera(facingModeOrDeviceId);
-qrScanner.start();
+import('../../node_modules/qr-scanner/qr-scanner.min.js').then((module) => {
+    const QrScanner = module.default;
+    //imports QRScanner
+    //import QrScanner from '../../node_modules/qr-scanner';
+    //Sets worker path
+    QrScanner.WORKER_PATH = '../../node_modules/qr-scanner/qr-scanner-worker.min.js';
 
-//if device has flash, and the flash isn't on, turn it on
-if(qrScanner.hasFlash()){
-    if(!qrScanner.isFlashOn()){
-        qrScanner.turnFlashOn();
-    }
-} 
+    //var videoElem;
+    //Creates QRScanner instance
+    const qrScanner = new QrScanner(videoElem, result => console.log('decoded qr code:', result, QrScanner._onDecodeError));
 
-//once scanned, display dialog box, stop scanning with qrScanner.stop();
-//qrScanner.turnFlashOff(); 
+   
 
+    //possibly look into Single image scanning instead of video
+    //if camera, scan
+    qrScanner.hasCamera();
+    qrScanner.setCamera(facingModeOrDeviceId);
+    qrScanner.start();
+
+    //if device has flash, and the flash isn't on, turn it on
+    if(qrScanner.hasFlash()){
+        if(!qrScanner.isFlashOn()){
+            qrScanner.turnFlashOn();
+        }
+    } 
+
+    //once scanned, display dialog box, stop scanning with qrScanner.stop();
+    //qrScanner.turnFlashOff(); 
+
+
+});
