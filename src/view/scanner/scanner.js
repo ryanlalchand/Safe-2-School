@@ -8,7 +8,7 @@
 //web cam video stream should get rendered here
 var videoElem = "<html><video></video></html>";
 
-import('../../node_modules/qr-scanner/qr-scanner.min.js').then((module) => {
+import('qr-scanner/qr-scanner.min').then((module) => {
     const QrScanner = module.default;
     //imports QRScanner
     //import QrScanner from '../../node_modules/qr-scanner';
