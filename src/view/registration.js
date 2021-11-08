@@ -32,8 +32,10 @@ res.render("scan",{ src });
 
 
 //set up port
+
 const port = 8085;
 app.listen(port, () => console.log("Server at port", port));
+
 
 
 //set up data for students (needs setters and getters for actual students)
@@ -55,4 +57,6 @@ console.log(url)
 QRCode.toDataURL(stringdata, function(err, url){
     if(err) return console.log("error occured")
     console.log(url)
+
 })
+
