@@ -21,5 +21,4 @@ async function populateDB() {
     console.log("Admin Password's match?: " + await db.adminLogIn("RSone1965", "ILIKEEmyJobaTON23"));
 
 }
-createDB();
-
+populateDB();
