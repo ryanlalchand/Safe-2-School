@@ -16,10 +16,10 @@ const fs = require('fs');
 //need to make list provide a clean string list that can be outputed *done*
 //need to make the push to log file then clean collection *done* //maybe move to pushing json files
 //need to add update info for all the above driver / student *done* / admin
-//need to think about changing admin and driver data formats to make everything cleaner 
-//need to think about how to save username and passwords 
-//user clean text 
-//passwords ?? some type on encryption not a live service atm so no big deal?
+//need to think about changing admin and driver data formats to make everything cleaner *done*
+//need to think about how to save username and passwords *done*
+//user clean text *done*
+//passwords ?? some type on encryption not a live service atm so no big deal?*done*
 
 class Database {
     constructor() {}
