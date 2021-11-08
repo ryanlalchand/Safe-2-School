@@ -5,12 +5,11 @@ async function populateDB() {
     const db = await new Database();
     //comment these out once youve added them once so you dont have a bunch of dupes
     //populate  student
-    await db.pushStudent("Caroline", 22, "Youngstown", 1235432222, "wdasdwa.oiawhdiubhw.djlabdwajd",
-        "12:45", "24:45");
+    //await db.pushStudent("Caroline", 22, "Youngstown", 1235432222, "wdasdwa.oiawhdiubhw.djlabdwajd","12:45", "24:45");
     //populate driver
-    await db.pushDriver("Robert Jones", 32, "Bob22", "ILikeCats43");
+    //await db.pushDriver("Robert Jones", 32, "Bob22", "ILikeCats43");
     //populate admin
-    await db.pushAdmin("Robert Stone", 54, "RStone1965", "IHATEmyJob23");
+    //await db.pushAdmin("Robert Stone", 54, "RStone1965", "IHATEmyJob23");
 
 
     //should return true
