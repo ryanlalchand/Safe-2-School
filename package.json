@@ -22,9 +22,11 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "jade": "^1.11.0",
     "mongo-parse": "^2.1.0",
     "mongodb": "^4.1.3",
     "mongoose": "^6.0.11",
+    "object-mapper": "^6.2.0",
     "qr-scanner": "^1.3.0",
     "qrcode": "^1.4.4",
     "qrious": "^4.0.2"

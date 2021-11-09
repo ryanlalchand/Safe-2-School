@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head.ejs'); %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include('./partials/adminheader.ejs'); %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+            <h1>Weclome
+                <%= user %>
+            </h1>
+            <p>to the admin control panel</p>
+
+        </div>
+    </main>
+
+    <footer>
+        <%- include('./partials/footer.ejs'); %>
+    </footer>
+
+</body>
+
+</html>

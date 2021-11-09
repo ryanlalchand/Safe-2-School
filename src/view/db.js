@@ -1,12 +1,9 @@
 //required includes here
 //const mongoose = require('mongoose');
-const config = require('./config/dev');
+const config = require('../../src/config/dev');
 const pwManage = require('./passwordmanage')
 const MongoClient = require('mongodb').MongoClient;
 //schemas for db here
-const Driver = require('./models/driver');
-const Student = require('./models/students');
-const Admin = require('./models/admin');
 const fs = require('fs');
 //test includes here
 
@@ -160,6 +157,8 @@ class Database {
 
         try {
             const db = client.db("test");
+
+
 
             let collection = db.collection('students');
             for await (const doc of collection.find()) {
