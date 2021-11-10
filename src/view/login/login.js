@@ -62,6 +62,9 @@ app.get('/admin', function(request, response) {
         response.render('admin.ejs', {
             user: user
         });
+
+
+    } else {
         response.send('Please login to view this page or you do not have permission to view this page!');
     }
     response.end();
