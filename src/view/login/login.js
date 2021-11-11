@@ -2,7 +2,7 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
-const Database = require('./../db.js')
+const Database = require('../db.js')
 const router = express.Router();
 
 var app = express();
@@ -84,6 +84,8 @@ app.get("/students", function(request, response) {
     ];
     response.render("students.ejs", { students: students });
 });
+
+app.set('views', path.join(__dirname, '/ejsfiles'));
 app.set('view engine', 'ejs');
 app.use("/", router);
 app.listen(3000);
