@@ -6,7 +6,7 @@ const express = require('express')
 const app = express();
 const bp = require('body-parser')
 
-app.set('views','./views');
+app.set('view','/');
 app.set('view engine', 'ejs');
 
 app.use(express.static(__dirname));
@@ -14,7 +14,7 @@ app.use(bp.json());
 
 //routing to registration.ejs file
 app.get("/",(req, res) =>{
-    res.render("index");
+    res.render("registration.html");
 });
 
 //POST request listener to convert text/URL to QRcode
@@ -35,7 +35,7 @@ res.render("scan",{ src });
 
 //set up port
 const port = 8085;
-app.listen(port, () => console.log("Server at port 5000"));
+app.listen(port, () => console.log(" go to http://localhost:8085"));
 
 
 //set up data for students (needs setters and getters for actual students)
