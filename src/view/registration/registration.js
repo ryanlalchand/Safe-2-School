@@ -57,4 +57,6 @@ console.log(url)
 QRCode.toDataURL(stringdata, function(err, url){
     if(err) return console.log("error occured")
     console.log(url)
+
 })
+
