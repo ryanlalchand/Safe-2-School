@@ -1,0 +1,39 @@
+<html lang="en">
+    <head>
+        <title> QR Code Generator</title>
+<!--bootstrap css-->
+<link rel = "stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+   
+ <!-- Custom CSS -->
+ <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+    * {
+        font-family: Montserrat;
+    }
+    body {
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>
+    </head>
+</html>
+<body>
+    <div class ="contatiner">
+        <h1 class="text-center"> QR Code Generator</h1>
+        <hr>
+        <h4>Input</h4>
+    <hr>
+        <p>Please type the URL or Text below and click Generate!</p>
+    <form class="form" action="/scan" method="POST">
+    <input name="url" class="form-control" placeholder="URL or Text" type="text" required>
+    <br>
+    <button type="submit" class="btn btn-primary" value="Get QR">Generate</button>
+    </form>
+    <nav>
+        <a href="/scanner.js">Scan QR Code</a>
+        <a href="/registration.js">Register a Student</a>
+        <a href="/admin.js">Track Students - Admin only</a>
+    </nav>
+</div>
+</body>
+</html>
