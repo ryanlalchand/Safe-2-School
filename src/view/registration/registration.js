@@ -1,20 +1,23 @@
-//register a student form
+const QRCode = require('qrcode');
+var express = require('express');
+var session = require('express-session');
+var path = require('path');
+const bodyParser = require('body-parser');
+const Database = require('../../db.js');
 
-//import packages needed
-const QRCode = require('qrcode')
-const express = require('express')
-const app = express();
-const bp = require('body-parser')
+var app = express();
 
-app.set('view','/');
-app.set('view engine', 'ejs');
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-app.use(express.static(__dirname));
-app.use(bp.json());
-
-//routing to registration.ejs file
+//routing to registration.html
 app.get("/",(req, res) =>{
-    res.render("registration.html");
+    res.sendFile(path.join(__dirname + "/registration.html"));
 });
 
 //POST request listener to convert text/URL to QRcode

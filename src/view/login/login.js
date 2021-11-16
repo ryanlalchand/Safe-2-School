@@ -2,8 +2,7 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
-const Database = require('../../db.js')
-
+const Database = require('../../db.js');
 
 var app = express();
 app.use(session({
