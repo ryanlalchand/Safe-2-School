@@ -11,6 +11,28 @@
         body {
             padding-top: 50px;
         }
+        
+        table {
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
+        
+        th {
+            background-color: #4287f5;
+            color: white;
+        }
+        
+        th,
+        td {
+            width: 150px;
+            text-align: center;
+            border: 1px solid black;
+            padding: 5px;
+        }
+        
+        h2 {
+            color: #4287f5;
+        }
     </style>
 </head>
 
@@ -24,20 +46,36 @@
         <table>
             <tr>
                 <th>Name</th>
-                <th>Age</th>
+                <th>Age </th>
                 <th>Location</th>
+                <th>Phone number </th>
+                <th>URL</th>
+                <th>Drop Off AM</th>
+                <th>Drop Off PM</th>
             </tr>
             <tr>
-                <% for(var i=0; i<students.length; i++){ %>
+                <% for(var i=1; i<students.length; i++){ %>
                     <tr>
                         <td>
-                            <%= students[i].fullname %>
+                            <%= students[i].name %>
                         </td>
                         <td>
                             <%= students[i].age %>
                         </td>
                         <td>
                             <%= students[i].location %>
+                        </td>
+                        <td>
+                            <%= students[i].phone %>
+                        </td>
+                        <td>
+                            url.com
+                        </td>
+                        <td>
+                            <%= students[i].dropoffAM %>
+                        </td>
+                        <td>
+                            <%= students[i].dropoffPM %>
                         </td>
                     </tr>
                     <% } %>

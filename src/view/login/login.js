@@ -78,11 +78,12 @@ app.get('/driver', function(request, response) {
 });
 
 app.get("/students", function(request, response) {
-    var students = [{ fullname: "Caroline Snyder", age: "22", location: "Ohio" },
-        { fullname: "Haroline Snyder", age: "23", location: "PA" },
-        { fullname: "Bob Boberinton", age: "12", location: "New York" }
-    ];
-    response.render("students.ejs", { students: students });
+    async function studentDriver() {
+        const db = new Database();
+        var students = await db.allStudentQuery();
+        response.render("students.ejs", { students: students });
+    }
+    studentDriver();
 });
 
 app.set('views', path.join(__dirname, '/ejsfiles'));

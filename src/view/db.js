@@ -145,6 +145,7 @@ class Database {
     //to change how it exports data into nice lines need to look into it
     //changed to formatting nicely instead of dumping documents
     //calls to allstudentquery must be made async
+    //returns an object 
 
     async allStudentQuery() {
         var buildstring = "";
@@ -161,8 +162,21 @@ class Database {
 
 
             let collection = db.collection('students');
+
+            var obj = [{}];
+
             for await (const doc of collection.find()) {
-                buildstring = "Name: " + doc.name + " Location: " + doc.location + "\n" + buildstring;
+
+                obj.push({
+                    name: doc.name,
+                    age: doc.age,
+                    location: doc.location,
+                    phone: doc.phone,
+                    url: doc.url,
+                    dropoffAM: doc.dropoffAM,
+                    dropoffPM: doc.dropoffPM
+                });
+                //buildstring = "Name: " + doc.name + " Location: " + doc.location + "\n" + buildstring;
                 // Prints documents one at a time
             }
 
@@ -173,7 +187,7 @@ class Database {
 
             client.close();
             //console.log(buildstring); //test to see if string is made right
-            return buildstring;
+            return obj;
         }
     }
 
