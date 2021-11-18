@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>All Students</title>
+
+    <!-- CSS (load bootstrap from a CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        
+        table {
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
+        
+        th {
+            background-color: #4287f5;
+            color: white;
+        }
+        
+        th,
+        td {
+            width: 150px;
+            text-align: center;
+            border: 1px solid black;
+            padding: 5px;
+        }
+        
+        h2 {
+            color: #4287f5;
+        }
+    </style>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include('./partials/adminheader.ejs'); %>
+    </header>
+
+    <main>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Age </th>
+                <th>Location</th>
+                <th>Phone number </th>
+                <th>URL</th>
+                <th>Drop Off AM</th>
+                <th>Drop Off PM</th>
+            </tr>
+            <tr>
+                <% for(var i=1; i<students.length; i++){ %>
+                    <tr>
+                        <td>
+                            <%= students[i].name %>
+                        </td>
+                        <td>
+                            <%= students[i].age %>
+                        </td>
+                        <td>
+                            <%= students[i].location %>
+                        </td>
+                        <td>
+                            <%= students[i].phone %>
+                        </td>
+                        <td>
+                            url.com
+                        </td>
+                        <td>
+                            <%= students[i].dropoffAM %>
+                        </td>
+                        <td>
+                            <%= students[i].dropoffPM %>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tr>
+        </table>
+    </main>
+
+    <footer>
+        <%- include('./partials/footer.ejs'); %>
+    </footer>
+
+</body>
+
+</html>
