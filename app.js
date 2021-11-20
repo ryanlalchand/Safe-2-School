@@ -113,15 +113,14 @@ let stringdata = JSON.stringify(data)
 
 //testing purposes
 QRCode.toString(stringdata,{type:'terminal'}, function(err,url){
-if(err) return console.log("error occured")
-console.log(url)
+    if(err) return console.log("error occured")
+    console.log(url)
 })
 
 //getting base64 URL
 QRCode.toDataURL(stringdata, function(err, url){
     if(err) return console.log("error occured")
     console.log(url)
-
 })
 
 app.set('views', path.join(__dirname, '/ejsfiles'));
