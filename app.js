@@ -1,8 +1,9 @@
+const QRCode = require('qrcode');
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
-const Database = require('../db.js')
+const Database = require('../../config/db.js')
 const router = express.Router();
 
 var app = express();
@@ -86,7 +87,43 @@ app.get("/students", function(request, response) {
     studentDriver();
 });
 
+
+//POST request listener to convert text/URL to QRcode
+app.post("/scan", (req, res) =>{
+    const url = req.body.url;
+
+//if input is null give error
+if (url.length === 0) res.send("Error: No data");
+
+QRCode.toDataURL(url,(err, src)=>{
+if (err) res.send("Error occurred");
+
+res.render("scan",{ src });
+    });
+}); 
+
+//set up data for students (needs setters and getters for actual students)
+let data = {
+    name: "Jane Doe",
+    phnumber:"888888888"
+}
+
+//converting into data 
+let stringdata = JSON.stringify(data)
+
+//testing purposes
+QRCode.toString(stringdata,{type:'terminal'}, function(err,url){
+    if(err) return console.log("error occured")
+    console.log(url)
+})
+
+//getting base64 URL
+QRCode.toDataURL(stringdata, function(err, url){
+    if(err) return console.log("error occured")
+    console.log(url)
+})
+
 app.set('views', path.join(__dirname, '/ejsfiles'));
 app.set('view engine', 'ejs');
 app.use("/", router);
-app.listen(3000);
+app.listen(3000, () => console.log(" go to http://localhost:3000"));

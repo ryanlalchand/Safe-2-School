@@ -1,6 +1,6 @@
 //required includes here
 //const mongoose = require('mongoose');
-const config = require('../config/dev');
+const config = require('./dev');
 const pwManage = require('./passwordmanage')
 const MongoClient = require('mongodb').MongoClient;
 //schemas for db here
