@@ -87,6 +87,7 @@ app.get("/students", function(request, response) {
     studentDriver();
 });
 
+
 //POST request listener to convert text/URL to QRcode
 app.post("/scan", (req, res) =>{
     const url = req.body.url;
@@ -94,19 +95,12 @@ app.post("/scan", (req, res) =>{
 //if input is null give error
 if (url.length === 0) res.send("Error: No data");
 
-
 QRCode.toDataURL(url,(err, src)=>{
 if (err) res.send("Error occurred");
 
 res.render("scan",{ src });
     });
 }); 
-
-
-//set up port
-const port = 8085;
-app.listen(port, () => console.log(" go to http://localhost:8085"));
-
 
 //set up data for students (needs setters and getters for actual students)
 let data = {
@@ -130,8 +124,7 @@ QRCode.toDataURL(stringdata, function(err, url){
 
 })
 
-
 app.set('views', path.join(__dirname, '/ejsfiles'));
 app.set('view engine', 'ejs');
 app.use("/", router);
-app.listen(3000);
+app.listen(3000, () => console.log(" go to http://localhost:3000"));
