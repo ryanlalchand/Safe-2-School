@@ -131,13 +131,13 @@
     // for debugging
     window.scanner = scanner;
 
-    /* document.getElementById('show-scan-region').addEventListener('change', (e) => {
+    document.getElementById('show-scan-region').addEventListener('change', (e) => {
         const input = e.target;
         const label = input.parentNode;
         label.parentNode.insertBefore(scanner.$canvas, label.nextSibling);
         scanner.$canvas.style.display = input.checked ? 'block' : 'none';
-    }); */
-
+    }); 
+        
     document.getElementById('inversion-mode-select').addEventListener('change', event => {
         scanner.setInversionMode(event.target.value);
     });

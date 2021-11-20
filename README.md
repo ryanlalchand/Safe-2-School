@@ -24,7 +24,8 @@ Dr. Feng Yu for the project idea
 ## Setup
 Clone the repo to your own machine
 
-Open in your editor of choice
+Open the terminal and navigate to the directory where you cloned the repo
 
 Run `npm install` to install dependencies
 
+Assuming you have Node.js installed, run `node app.js` to start the server
