@@ -24,8 +24,12 @@ Dr. Feng Yu for the project idea
 ## Setup
 Clone the repo to your own machine
 
+You'll need to install MongoDB and Compass, and generate some dummy data for the students as well as authenticated users
+
 Open the terminal and navigate to the directory where you cloned the repo
 
 Run `npm install` to install dependencies
 
 Assuming you have Node.js installed, run `node app.js` to start the server
+
+Navigate to http://localhost:3000 to log in
