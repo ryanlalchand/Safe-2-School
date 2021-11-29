@@ -3,7 +3,7 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
-const Database = require('../../config/db.js')
+const Database = require('./src/config/db.js');
 const router = express.Router();
 
 var app = express();
