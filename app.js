@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get('/', function(request, response) {
-    response.sendFile(path.join(__dirname + '/login.html'));
+    response.sendFile(path.join(__dirname + '/src/views/login.html'));
 });
 
 app.post('/auth', function(request, response) {
@@ -89,41 +89,41 @@ app.get("/students", function(request, response) {
 
 
 //POST request listener to convert text/URL to QRcode
-app.post("/scan", (req, res) =>{
+app.post("/scan", (req, res) => {
     const url = req.body.url;
 
-//if input is null give error
-if (url.length === 0) res.send("Error: No data");
+    //if input is null give error
+    if (url.length === 0) res.send("Error: No data");
 
-QRCode.toDataURL(url,(err, src)=>{
-if (err) res.send("Error occurred");
+    QRCode.toDataURL(url, (err, src) => {
+        if (err) res.send("Error occurred");
 
-res.render("scan",{ src });
+        res.render("scan", { src });
     });
-}); 
+});
 
 //set up data for students (needs setters and getters for actual students)
 let data = {
     name: "Jane Doe",
-    phnumber:"888888888"
+    phnumber: "888888888"
 }
 
 //converting into data 
 let stringdata = JSON.stringify(data)
 
 //testing purposes
-QRCode.toString(stringdata,{type:'terminal'}, function(err,url){
-    if(err) return console.log("error occured")
+QRCode.toString(stringdata, { type: 'terminal' }, function(err, url) {
+    if (err) return console.log("error occured")
     console.log(url)
 })
 
 //getting base64 URL
-QRCode.toDataURL(stringdata, function(err, url){
-    if(err) return console.log("error occured")
+QRCode.toDataURL(stringdata, function(err, url) {
+    if (err) return console.log("error occured")
     console.log(url)
 })
 
-app.set('views', path.join(__dirname, '/ejsfiles'));
+app.set('views', path.join(__dirname, '/src/views/ejsfiles'));
 app.set('view engine', 'ejs');
 app.use("/", router);
 app.listen(3000, () => console.log(" go to http://localhost:3000"));
