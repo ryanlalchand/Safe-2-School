@@ -182,7 +182,6 @@ QRCode.toDataURL(stringdata, function(err, url) {
 })
 
 
-
 app.set('views', path.join(__dirname, '/src/views/ejsfiles'));
 app.set('view engine', 'ejs');
 app.use("/", router);

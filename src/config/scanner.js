@@ -1,74 +1,4 @@
-<!DOCTYPE html>
-<!-- saved from url=(0040)https://nimiq.github.io/qr-scanner/demo/ -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <title>Qr Scanner</title>
-</head>
-<body>
-<style>
-    hr {
-        margin-top: 32px;
-    }
-    input[type="file"] {
-        display: block;
-        margin-bottom: 16px;
-    }
-    div {
-        margin-bottom: 16px;
-    }
-    #flash-toggle {
-        display: none;
-    }
-</style>
-<h1>Please Scan QR Code!</h1>
-<div>
-    <video id="qr-video" disablepictureinpicture="" playsinline="" style="transform: scaleX(-1);"></video>
-    <br>
-    <!-- <label>
-        <input id="show-scan-region" type="checkbox">
-        Show scan region
-    </label> -->
-</div>
-<div>
-    <select id="inversion-mode-select">
-        <option value="original">Scan original (dark QR code on bright background)</option>
-        <option value="invert">Scan with inverted colors (bright QR code on dark background)</option>
-        <option value="both">Scan both</option>
-    </select>
-    <br>
-</div>
-<b>Device has camera: </b>
-<span id="cam-has-camera">true</span>
-<br>
-<div>
-    <b>Preferred camera:</b>
-    <select id="cam-list">
-        <option value="environment" selected="">Environment Facing (default)</option>
-        <option value="user">User Facing</option>
-    <option value="0ceef4bf41cc596c287ec994f8cf16eb0d4a86aec6d077459a10a513b8933925">FaceTime HD Camera (Built-in) (05ac:8514)</option></select>
-</div>
-<!-- <b>Camera has flash: </b>
-<span id="cam-has-flash">false</span>
-<div>
-    <button id="flash-toggle" style="display: none;">📸 Flash: <span id="flash-state">off</span></button>
-</div>-->
-<br>
-<b>Detected QR code: </b>
-<span id="cam-qr-result" style="color: inherit;">No QR code found</span>
-<br>
-<b>Last detected at: </b>
-<span id="cam-qr-result-timestamp"></span>
-<br>
-<button id="start-button">Start</button>
-<button id="stop-button">Stop</button>
-<hr>
-
-<!-- <h1>Scan from File:</h1>
-<input type="file" id="file-selector">
-<b>Detected QR code: </b>
-<span id="file-qr-result">None</span> -->
-
-<script type="module">
+module.exports = {
     // Logic to create timestamp
     let date = new Date();
     let timestamp = date.getFullYear() + '-' + ("0" + (date.getMonth()+1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2)
@@ -170,7 +100,4 @@
             .catch(e => setResult(fileQrResult, e || 'No QR code found.'));
     });
 
-</script>
-
-
-</body></html>
+}
