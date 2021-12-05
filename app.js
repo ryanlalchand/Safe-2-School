@@ -216,6 +216,26 @@ app.get("/scan", (req, res) => {
     res.render('scan.ejs');
 });
 
+//set up data for students (needs setters and getters for actual students)
+let data = {
+    name: "Jane Doe",
+    phnumber: "888888888"
+}
+
+//converting into data 
+let stringdata = JSON.stringify(data)
+
+//testing purposes
+QRCode.toString(stringdata, { type: 'terminal' }, function(err, url) {
+    if (err) return console.log("error occured")
+    console.log(url)
+})
+
+//getting base64 URL
+QRCode.toDataURL(stringdata, function(err, url) {
+    if (err) return console.log("error occured")
+    console.log(url)
+})
 
 app.set('views', path.join(__dirname, '/src/views/ejsfiles'));
 app.set('view engine', 'ejs');
