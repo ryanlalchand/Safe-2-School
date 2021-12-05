@@ -3,6 +3,7 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
+const fs = require('fs');
 const Database = require('./src/config/db.js');
 const router = express.Router();
 
@@ -12,11 +13,12 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get('/', function(request, response) {
-    response.sendFile(path.join(__dirname + '/src/views/login.html'));
+    response.render('login.ejs');
 });
 
 app.post('/auth', function(request, response) {
@@ -30,6 +32,9 @@ app.post('/auth', function(request, response) {
             const db = new Database();
             var adminLog = await db.adminLogIn(username, password);
             var driverLog = await db.driverLogIn(username, password);
+            var parentLog = await db.parentLogIn(username, password);
+
+            console.log(parentLog);
 
             if (adminLog == true) {
                 request.session.loggedin = true;
@@ -45,6 +50,12 @@ app.post('/auth', function(request, response) {
                 console.log("worked driver");
                 response.redirect('/driver');
 
+            } else if (parentLog == true) {
+                request.session.loggedin = true;
+                request.session.username = username;
+                request.session.type = 'parent';
+                console.log("worked parent");
+                response.redirect('/parent');
             } else {
                 response.send("Incorrect user or pass");
             }
@@ -72,6 +83,23 @@ app.get('/admin', function(request, response) {
 app.get('/driver', function(request, response) {
     if (request.session.loggedin && request.session.type == 'driver') {
         response.render('driver.ejs');
+    } else {
+        response.send('Please login to view this page or you do not have permission to view this page!');
+    }
+    response.end();
+});
+
+app.get('/parent', function(request, response) {
+    if (request.session.loggedin && request.session.type == 'parent') {
+        var user = request.session.username;
+        const db = new Database();
+        var child = db.findStudentFromParent(user)
+        var loc = db.findStudent(child)
+        response.render('parent.ejs', {
+            user: user,
+            child: child,
+            locations: loc.location
+        });
     } else {
         response.send('Please login to view this page or you do not have permission to view this page!');
     }
@@ -122,15 +150,49 @@ app.post('/register', function(request, response) {
     var phone = request.body.phoneNumber;
     var age = request.body.age;
     var address = request.body.address;
+    //var parentUser = request.body.parentUser;
+    // var parentPassword = request.body.parentPassword;
 
     async function studentRegister() {
         const db = new Database();
         await db.pushStudent(first + " " + last, age, address, phone, null, null, null);
-        request.session.name = first + " " + last + " was registered."
+        request.session.name = first + " " + last + " was registered. \n"
         var name = request.session.name;
+        //  await db.pushParent(parentUser, parentPassword, first + " " + last)
+
+        //set up data for students (needs setters and getters for actual students)
+        let data = {
+            firstName: first,
+            lastName: last,
+            phnumber: phone,
+            age: age,
+            address: address
+        }
+
+        //converting into data 
+        let stringdata = JSON.stringify(data)
+
+        //testing purposes
+        generateQR = async text => {
+            try {
+                await QRCode.toFile('./public/qr-code.png', text);
+                console.log("test successful")
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        await generateQR(stringdata);
+
+        //getting base64 URL
+
         response.render('registration.ejs', {
             name: name
         });
+
+
+
+
+
         response.end();
     }
     if (phone.length == 10)
@@ -147,17 +209,11 @@ app.post('/register', function(request, response) {
 
 
 //POST request listener to convert text/URL to QRcode
+
 app.get("/scan", (req, res) => {
     const url = req.body.url;
-
     //if input is null give error
-    if (url.length === 0) res.send("Error: No data");
-
-    QRCode.toDataURL(url, (err, src) => {
-        if (err) res.send("Error occurred");
-
-        res.render("scan", { src });
-    });
+    res.render('scan.ejs');
 });
 
 //set up data for students (needs setters and getters for actual students)
@@ -181,8 +237,8 @@ QRCode.toDataURL(stringdata, function(err, url) {
     console.log(url)
 })
 
-
 app.set('views', path.join(__dirname, '/src/views/ejsfiles'));
 app.set('view engine', 'ejs');
 app.use("/", router);
 app.listen(3000, () => console.log(" go to http://localhost:3000"));
+app.use(express.static("public"));

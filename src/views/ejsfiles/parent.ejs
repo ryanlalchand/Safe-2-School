@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head.ejs'); %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include('./partials/adminheader.ejs'); %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+            <h1>Weclome
+                <%= user %>
+            </h1>
+            <p>to the parent area your child
+                <%= child %> is currently at
+                    <%= location %>
+            </p>
+
+
+        </div>
+    </main>
+
+    <footer>
+        <%- include('./partials/footer.ejs'); %>
+    </footer>
+
+</body>
+
+</html>

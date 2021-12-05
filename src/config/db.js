@@ -119,11 +119,16 @@ class Database {
             let query = { name: namein }
 
             let res = await collection.findOne(query);
-
-            buildstring = " Name: " + res.name + " Age: " + res.age +
-                " Location: " + res.location + " Phone Number: " +
-                res.phonenumber + " url: " + res.url + " First Drop: " + res.dropoffAM +
-                " Second Drop: " + res.dropoffPM;
+            var obj;
+            obj = ({
+                name: doc.name,
+                age: doc.age,
+                location: doc.location,
+                phone: doc.phone,
+                url: doc.url,
+                dropoffAM: doc.dropoffAM,
+                dropoffPM: doc.dropoffPM
+            });
 
             //console.log(buildstring);
 
@@ -134,7 +139,7 @@ class Database {
 
             client.close();
 
-            return buildstring;
+            return obj;
         }
     }
 
@@ -627,6 +632,108 @@ class Database {
         }
 
     }
+
+    async parentLogIn(username, password) {
+        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
+            .catch(err => { console.log(err); });
+
+        var passBool
+
+        if (!client) {
+            return;
+        }
+
+        try {
+
+            const pw = await new pwManage();
+
+            const db = client.db("test");
+
+            let collection = db.collection('parents');
+
+            let query = { username: username }
+
+            let res = await collection.findOne(query);
+
+            passBool = await pw.validPassword(password, res.password)
+
+        } catch (err) {
+
+            passBool = false;
+        } finally {
+
+            client.close();
+            return passBool
+        }
+
+    }
+    async pushParent(username, password, child) {
+        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
+            .catch(err => { console.log(err); });
+
+        if (!client) {
+            return;
+        }
+
+        try {
+
+            const pw = await new pwManage();
+
+            var passHex = await pw.passSet(password);
+
+            const db = client.db("test");
+
+            let collection = db.collection('parent');
+
+            let query = { username: username, password: passHex, child: child }
+
+            let res = await collection.insertOne(query);
+
+            console.log("user added")
+
+        } catch (err) {
+
+            console.log(err);
+        } finally {
+
+            client.close();
+
+        }
+
+
+
+
+    }
+    async findStudentFromParent(user) {
+        var buildstring;
+        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
+            .catch(err => { console.log(err); });
+
+        if (!client) {
+            return;
+        }
+
+        try {
+
+            const db = client.db("test");
+
+            let collection = db.collection('parent');
+
+            let query = { username: user }
+
+            let res = await collection.findOne(query);
+
+        } catch (err) {
+
+            console.log(err);
+        } finally {
+
+            client.close();
+
+            return res.child;
+        }
+    }
+
 
 }
 module.exports = Database;
