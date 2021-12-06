@@ -203,11 +203,12 @@ app.post('/register', function(request, response) {
 });
 
 app.get("/scan", function(request, response) {
-    if (request.body.url == null) {
-        response.render('scanner.ejs');
+    if (request.session.loggedin) {
+        response.render('scanner.html');
+    } else {
+        response.send('Please login to view this page!');
     }
-    //if input is null give error
-    response.render('scanner.ejs');
+    response.end();
 });
 
 
