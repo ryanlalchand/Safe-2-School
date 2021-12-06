@@ -75,7 +75,7 @@ app.get('/admin', function(request, response) {
             user: user
         });
     } else {
-        response.send('Please login to view this page or you do not have permission to view this page!');
+        response.send('Please login to view this page!');
     }
     response.end();
 });
@@ -84,7 +84,7 @@ app.get('/driver', function(request, response) {
     if (request.session.loggedin && request.session.type == 'driver') {
         response.render('driver.ejs');
     } else {
-        response.send('Please login to view this page or you do not have permission to view this page!');
+        response.send('Please login to view this page!');
     }
     response.end();
 });
@@ -101,7 +101,7 @@ app.get('/parent', function(request, response) {
             locations: loc.location
         });
     } else {
-        response.send('Please login to view this page or you do not have permission to view this page!');
+        response.send('Please login to view this page!');
     }
     response.end();
 });
@@ -116,7 +116,7 @@ app.get("/students", function(request, response) {
     if (request.session.loggedin) {
         studentDriver();
     } else
-        response.send('Please login to view this page or you do not have permission to view this page!');
+        response.send('Please login to view this page!');
 
 
 });
@@ -138,7 +138,7 @@ app.get('/registration', function(request, response) {
             name: name
         });
     } else {
-        response.send('Please login to view this page or you do not have permission to view this page!');
+        response.send('Please login to view this page!');
     }
     response.end();
 });
@@ -189,10 +189,6 @@ app.post('/register', function(request, response) {
             name: name
         });
 
-
-
-
-
         response.end();
     }
     if (phone.length == 10)
@@ -206,36 +202,14 @@ app.post('/register', function(request, response) {
     }
 });
 
-
-
-//POST request listener to convert text/URL to QRcode
-
-app.get("/scan", (req, res) => {
-    const url = req.body.url;
+app.get("/scan", function(request, response) {
+    if (request.body.url == null) {
+        response.render('scanner.ejs');
+    }
     //if input is null give error
-    res.render('scan.ejs');
+    response.render('scanner.ejs');
 });
 
-//set up data for students (needs setters and getters for actual students)
-let data = {
-    name: "Jane Doe",
-    phnumber: "888888888"
-}
-
-//converting into data 
-let stringdata = JSON.stringify(data)
-
-//testing purposes
-QRCode.toString(stringdata, { type: 'terminal' }, function(err, url) {
-    if (err) return console.log("error occured")
-    console.log(url)
-})
-
-//getting base64 URL
-QRCode.toDataURL(stringdata, function(err, url) {
-    if (err) return console.log("error occured")
-    console.log(url)
-})
 
 app.set('views', path.join(__dirname, '/src/views/ejsfiles'));
 app.set('view engine', 'ejs');
