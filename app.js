@@ -204,7 +204,7 @@ app.post('/register', function(request, response) {
 
 app.get("/scan", function(request, response) {
     if (request.session.loggedin) {
-        response.render('scanner.html');
+        response.render('scanner.ejs');
     } else {
         response.send('Please login to view this page!');
     }
