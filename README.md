@@ -15,20 +15,22 @@ For Youngstown State University's Software Engineering Course (CSCI 5801), our p
 ## Acknowledgements
 Dr. Feng Yu for the project idea
 
-[This QR Code Generator](https://www.npmjs.com/package/qrious)
+[This QR Code Generator](https://www.npmjs.com/package/qrcode)
 
-[This QR Code Scanner](https://www.npmjs.com/package/qrcode)
+[This QR Code Scanner](https://www.npmjs.com/package/jsqr)
 
 
 ## Setup
 Clone the repo to your own machine
 
-You'll need to install MongoDB and Compass, and generate some dummy data for the students as well as authenticated users
+You'll need to install MongoDB and Compass and initialize a localhost database
 
 Open the terminal and navigate to the directory where you cloned the repo
 
 Run `npm i` to install dependencies
 
+Run `node src/config/dbTest.js` to initialize some basic users
+
 Assuming you have Node.js installed, run `node app.js` to start the server
 
-Navigate to http://localhost:3000 to log in
+Navigate to localhost:3000 in the browser to log in
