@@ -211,9 +211,24 @@ app.get("/scan", function(request, response) {
     response.end();
 });
 
+const https = require('https');
 
 app.set('views', path.join(__dirname, '/src/views/ejsfiles'));
 app.set('view engine', 'ejs');
 app.use("/", router);
-app.listen(3000, () => console.log(" go to http://localhost:3000"));
+//app.listen(3000, () => console.log(" go to http://localhost:3000"));
 app.use(express.static("public"));
+
+https
+  .createServer(
+    {
+      key: fs.readFileSync("key.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },
+    app
+  )
+  .listen(3000, function () {
+    console.log(
+      "Go to https://localhost:3000/"
+    );
+});
