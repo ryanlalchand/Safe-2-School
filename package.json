@@ -31,6 +31,7 @@
     "object-mapper": "^6.2.0",
     "qr-scanner": "^1.3.0",
     "qrcode": "^1.4.4",
+    "workbox": "^0.0.0",
     "workbox-cli": "^6.4.2"
   }
 }
