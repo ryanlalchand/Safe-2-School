@@ -213,18 +213,20 @@ app.get("/scan", function(request, response) {
 
 app.post('/scandata', function(request, response) {
 
-    console.log(request.body.data);
-    var data = request.body.data;
-
+    
+    var data = JSON.parse(request.body.data);
+    
     var first = data.firstName;
     var last = data.lastName;
     var phone = data.phoneNumber;
     var age = data.age;
     var address = data.address;
+    const d = new Date();
+    var date = d.getHours().toString() + ":"+ d.getMinutes().toString();
 
     async function pushScan() {
         const db = new Database();
-        await db.updateStudent(first + " " + last, age, address, phone, null, Date.toString(), null);
+        await db.updateStudent(first + " " + last, age, address, phone, null, date, null);
 
         response.render('scanner.ejs');
 
@@ -234,6 +236,7 @@ app.post('/scandata', function(request, response) {
     pushScan();
 
 });
+
 
 const https = require('https');
 
