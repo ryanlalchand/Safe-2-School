@@ -1,4 +1,4 @@
-const Database = require('../db')
+const Database = require('./db')
 
 
 async function populateDB() {
@@ -17,7 +17,7 @@ async function populateDB() {
     //should return true
     console.log("Admin Password's match?: " + await db.adminLogIn("RStone1965", "IHATEmyJob23"));
     //should return false
-    console.log("Admin Password's match?: " + await db.adminLogIn("RSone1965", "ILIKEEmyJobaTON23"));
+    console.log("Admin Password's match?: " + await db.adminLogIn("RSone1965", "IHATEmyJob23"));
 
 }
 populateDB();
