@@ -211,9 +211,48 @@ app.get("/scan", function(request, response) {
     response.end();
 });
 
+app.post('/scandata', function(request, response) {
+
+    console.log(request.body.data);
+    var data = request.body.data;
+
+    var first = data.firstName;
+    var last = data.lastName;
+    var phone = data.phoneNumber;
+    var age = data.age;
+    var address = data.address;
+
+    async function pushScan() {
+        const db = new Database();
+        await db.updateStudent(first + " " + last, age, address, phone, null, Date.toString(), null);
+
+        response.render('scanner.ejs');
+
+        response.end();
+    }
+
+    pushScan();
+
+});
+
+const https = require('https');
 
 app.set('views', path.join(__dirname, '/src/views/ejsfiles'));
 app.set('view engine', 'ejs');
 app.use("/", router);
-app.listen(3000, () => console.log(" go to http://localhost:3000"));
+//app.listen(3000, () => console.log(" go to http://localhost:3000"));
 app.use(express.static("public"));
+
+https
+  .createServer(
+    {
+      key: fs.readFileSync("key.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },
+    app
+  )
+  .listen(3000, function () {
+    console.log(
+      "Go to https://localhost:3000/"
+    );
+});
