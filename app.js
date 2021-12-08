@@ -211,6 +211,66 @@ app.get("/scan", function(request, response) {
     response.end();
 });
 
+app.post('/scandata', function(request, response) {
+
+    console.log(request.body.data);
+    // var first = request.body.firstName;
+    // var last = request.body.lastName;
+    // var phone = request.body.phoneNumber;
+    // var age = request.body.age;
+    // var address = request.body.address;
+    // //var parentUser = request.body.parentUser;
+    // // var parentPassword = request.body.parentPassword;
+
+    // async function studentRegister() {
+    //     const db = new Database();
+    //     await db.pushStudent(first + " " + last, age, address, phone, null, null, null);
+    //     request.session.name = first + " " + last + " was registered. \n"
+    //     var name = request.session.name;
+    //     //  await db.pushParent(parentUser, parentPassword, first + " " + last)
+
+    //     //set up data for students (needs setters and getters for actual students)
+    //     let data = {
+    //         firstName: first,
+    //         lastName: last,
+    //         phnumber: phone,
+    //         age: age,
+    //         address: address
+    //     }
+
+    //     //converting into data 
+    //     let stringdata = JSON.stringify(data)
+
+    //     //testing purposes
+    //     generateQR = async text => {
+    //         try {
+    //             await QRCode.toFile('./public/qr-code.png', text);
+    //             console.log("test successful")
+    //         } catch (err) {
+    //             console.error(err)
+    //         }
+    //     }
+    //     await generateQR(stringdata);
+
+    //     //getting base64 URL
+
+    //     response.render('registration.ejs', {
+    //         name: name
+    //     });
+
+    //     response.end();
+    // }
+    // if (phone.length == 10)
+    //     studentRegister();
+    // else {
+    //     var name = "Please enter a valid phone number without the -";
+    //     response.render('registration.ejs', {
+    //         name: name
+    //     });
+    //     response.end();
+    // }
+});
+
 const https = require('https');
 
 app.set('views', path.join(__dirname, '/src/views/ejsfiles'));
