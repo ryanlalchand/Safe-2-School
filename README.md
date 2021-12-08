@@ -23,7 +23,7 @@ Dr. Feng Yu for the project idea
 ## Setup
 Clone the repo to your own machine
 
-You'll need to install MongoDB and Compass and initialize a localhost database
+You'll need to install [MongoDB Community Server](https://www.mongodb.com/try/download/community) and [Node.js LTS Version: 16.13.1](https://nodejs.org/en/download/) on your machine
 
 Open the terminal and navigate to the directory where you cloned the repo
 
@@ -31,6 +31,6 @@ Run `npm i` to install dependencies
 
 Run `node src/config/dbTest.js` to initialize some basic users
 
-Assuming you have Node.js installed, run `node app.js` to start the server
+Run `node app.js` to start the server
 
-Navigate to localhost:3000 in the browser to log in
+Navigate to https://localhost:3000 in the browser to log in
