@@ -33,4 +33,4 @@ Run `node src/config/dbTest.js` to initialize some basic users
 
 Run `node app.js` to start the server
 
-Navigate to https://localhost:3000 in the browser to log in
+Navigate to https://localhost:3000 in the browser to log in with an admin username & password from the `src/config/dbTest.js` file
