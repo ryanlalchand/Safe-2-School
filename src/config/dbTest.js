@@ -23,7 +23,7 @@ async function populateDB() {
   //should return false
   console.log(
     "Admin Password's match?: " +
-      (await db.adminLogIn("RSone1965", "IHATEmyJob23"))
+      (await db.adminLogIn("RSone1965", "iaehgjiopaefghuioahsde"))
   );
 }
 populateDB();

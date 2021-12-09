@@ -2,7 +2,6 @@
 
 const crypto = require("crypto");
 
-
 class pwManage {
   async passSet(password) {
     return new Promise((resolve, reject) => {
