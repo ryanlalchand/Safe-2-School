@@ -1,3 +1,3 @@
 module.exports = {
-    DB_URI : 'mongodb://localhost/'
-} 
+  DB_URI: "mongodb://localhost/",
+};

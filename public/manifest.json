@@ -1,8 +1,7 @@
 {
-    "name": "Safe 2 School",
-    "start_url": ".",
-    "display": "standalone",
-    "background_color": "#fff",
-    "description": "QR code generator and scanner to track students on a school bus route"
-  }
-  
+  "name": "Safe 2 School",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "QR code generator and scanner to track students on a school bus route"
+}

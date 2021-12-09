@@ -1,13 +1,13 @@
 //required includes here
 //const mongoose = require('mongoose');
-const config = require('./dev');
-const pwManage = require('./passwordmanage')
-const MongoClient = require('mongodb').MongoClient;
+const config = require("./dev");
+const pwManage = require("./passwordmanage");
+const MongoClient = require("mongodb").MongoClient;
 //schemas for db here
-const fs = require('fs');
+const fs = require("fs");
 //test includes here
 
-//notes 
+//notes
 //updating / updated all functions to be asynchronous
 //need to make push students asynchronous *DONE*
 //need to make list provide a clean string list that can be outputed *done*
@@ -19,721 +19,727 @@ const fs = require('fs');
 //passwords ?? some type on encryption not a live service atm so no big deal?*done*
 
 class Database {
-    constructor() {}
+  constructor() {}
 
-    //push students 
-    //js you cannot overload functions
-    //but you can leave options out and the DB will push successfully
-    //only issue is if for some reason you had a dropoff in PM and not AM you decided to drop
-    //which one so maybe just first dropoff then second?
-    //issues solved move to asynch with new functions structure :D
-    async pushStudent(fullname, fullage, curloc, phone, url, dropoffAM, dropoffPM) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+  //push students
+  //js you cannot overload functions
+  //but you can leave options out and the DB will push successfully
+  //only issue is if for some reason you had a dropoff in PM and not AM you decided to drop
+  //which one so maybe just first dropoff then second?
+  //issues solved move to asynch with new functions structure :D
+  async pushStudent(
+    fullname,
+    fullage,
+    curloc,
+    phone,
+    url,
+    dropoffAM,
+    dropoffPM
+  ) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-        if (!client) {
-            return;
-        }
-
-        try {
-
-            const db = client.db("test");
-
-            let collection = db.collection('students');
-
-            let query = {
-                name: fullname,
-                age: fullage,
-                location: curloc,
-                phonenumber: phone,
-                url: url,
-                dropoffAM: dropoffAM,
-                dropoffPM: dropoffPM
-            }
-
-            let res = await collection.insertOne(query);
-
-            console.log("user added")
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-
-        }
-
-
+    if (!client) {
+      return;
     }
 
-    //remove students from
-    //this needs working on and not complete throws error *fixed*
-    //will look into i am assuming has to do with call *fixed*
-    async removeStudent(namein) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const db = client.db("test");
 
-        if (!client) {
-            return;
-        }
+      let collection = db.collection("students");
 
-        try {
+      let query = {
+        name: fullname,
+        age: fullage,
+        location: curloc,
+        phonenumber: phone,
+        url: url,
+        dropoffAM: dropoffAM,
+        dropoffPM: dropoffPM,
+      };
 
-            const db = client.db("test");
+      let res = await collection.insertOne(query);
 
-            let collection = db.collection('students');
+      console.log("user added");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+    }
+  }
 
-            let query = { name: namein }
+  //remove students from
+  //this needs working on and not complete throws error *fixed*
+  //will look into i am assuming has to do with call *fixed*
+  async removeStudent(namein) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-            let res = await collection.findOneAndDelete(query);
-
-            console.log("Deleted student")
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-        }
+    if (!client) {
+      return;
     }
 
-    //query singular student
-    //tested works
-    async findStudent(namein) {
-        var buildstring;
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const db = client.db("test");
 
-        if (!client) {
-            return;
-        }
+      let collection = db.collection("students");
 
-        try {
+      let query = { name: namein };
 
-            const db = client.db("test");
+      let res = await collection.findOneAndDelete(query);
 
-            let collection = db.collection('students');
+      console.log("Deleted student");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+    }
+  }
 
-            let query = { name: namein }
+  //query singular student
+  //tested works
+  async findStudent(namein) {
+    var buildstring;
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-            let res = await collection.findOne(query);
-            var obj;
-            obj = ({
-                name: doc.name,
-                age: doc.age,
-                location: doc.location,
-                phone: doc.phone,
-                url: doc.url,
-                dropoffAM: doc.dropoffAM,
-                dropoffPM: doc.dropoffPM
-            });
-
-            //console.log(buildstring);
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-
-            return obj;
-        }
+    if (!client) {
+      return;
     }
 
-    //
-    //query all student
-    //this will flash a json file at you probably best to put into a string t
-    //then parse a json will need to work on this a big becuase should be able
-    //to change how it exports data into nice lines need to look into it
-    //changed to formatting nicely instead of dumping documents
-    //calls to allstudentquery must be made async
-    //returns an object 
+    try {
+      const db = client.db("test");
 
-    async allStudentQuery() {
-        var buildstring = "";
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+      let collection = db.collection("students");
 
-        if (!client) {
-            return;
-        }
+      let query = { name: namein };
 
-        try {
-            const db = client.db("test");
+      let res = await collection.findOne(query);
+      var obj;
+      obj = {
+        name: doc.name,
+        age: doc.age,
+        location: doc.location,
+        phone: doc.phone,
+        url: doc.url,
+        dropoffAM: doc.dropoffAM,
+        dropoffPM: doc.dropoffPM,
+      };
 
+      //console.log(buildstring);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
 
+      return obj;
+    }
+  }
 
-            let collection = db.collection('students');
+  //
+  //query all student
+  //this will flash a json file at you probably best to put into a string t
+  //then parse a json will need to work on this a big becuase should be able
+  //to change how it exports data into nice lines need to look into it
+  //changed to formatting nicely instead of dumping documents
+  //calls to allstudentquery must be made async
+  //returns an object
 
-            var obj = [{}];
+  async allStudentQuery() {
+    var buildstring = "";
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-            for await (const doc of collection.find()) {
-
-                obj.push({
-                    name: doc.name,
-                    age: doc.age,
-                    location: doc.location,
-                    phone: doc.phone,
-                    url: doc.url,
-                    dropoffAM: doc.dropoffAM,
-                    dropoffPM: doc.dropoffPM
-                });
-                //buildstring = "Name: " + doc.name + " Location: " + doc.location + "\n" + buildstring;
-                // Prints documents one at a time
-            }
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-            //console.log(buildstring); //test to see if string is made right
-            return obj;
-        }
+    if (!client) {
+      return;
     }
 
-    //dangerous function drops entire collection without warning
-    //logs to backup log file in straight text format 
-    //maybe shift to exporting a json?
-    async cleanStudentsAndLog() {
-        var buildstring = "";
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const db = client.db("test");
 
-        if (!client) {
-            return;
-        }
+      let collection = db.collection("students");
 
-        try {
-            const db = client.db("test");
+      var obj = [{}];
 
-            let collection = db.collection('students');
-            for await (const doc of collection.find()) {
+      for await (const doc of collection.find()) {
+        obj.push({
+          name: doc.name,
+          age: doc.age,
+          location: doc.location,
+          phone: doc.phone,
+          url: doc.url,
+          dropoffAM: doc.dropoffAM,
+          dropoffPM: doc.dropoffPM,
+        });
+        //buildstring = "Name: " + doc.name + " Location: " + doc.location + "\n" + buildstring;
+        // Prints documents one at a time
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+      //console.log(buildstring); //test to see if string is made right
+      return obj;
+    }
+  }
 
-                buildstring = "Name: " + doc.name + " Location: " + doc.location + "\n" + buildstring;
-                // Prints documents one at a time
-            }
+  //dangerous function drops entire collection without warning
+  //logs to backup log file in straight text format
+  //maybe shift to exporting a json?
+  async cleanStudentsAndLog() {
+    var buildstring = "";
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-
-            //console.log(buildstring); //test to see if string is made right
-            try {
-                var today = new Date();
-                var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                await fs.writeFile('log' + date + '.txt', buildstring, function(err) {
-                    if (err) return console.log(err);
-                });
-            } catch (err) {
-                console.log(err)
-            } finally {
-
-                console.log("log file created")
-                const db = client.db("test");
-                let collection = db.collection('students');
-                await collection.deleteMany();
-                console.log("Student Collection Cleared")
-                client.close();
-            }
-        }
-
-
+    if (!client) {
+      return;
     }
 
-    //updates a student document based on name atm
-    //needs to be supplied with all fields for everything to update
-    async updateStudent(namein, fullage, curloc, phone, url, dropoffAM, dropoffPM) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const db = client.db("test");
 
-        if (!client) {
-            return;
-        }
+      let collection = db.collection("students");
+      for await (const doc of collection.find()) {
+        buildstring =
+          "Name: " +
+          doc.name +
+          " Location: " +
+          doc.location +
+          "\n" +
+          buildstring;
+        // Prints documents one at a time
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      //console.log(buildstring); //test to see if string is made right
+      try {
+        var today = new Date();
+        var date =
+          today.getFullYear() +
+          "-" +
+          (today.getMonth() + 1) +
+          "-" +
+          today.getDate();
+        await fs.writeFile("log" + date + ".txt", buildstring, function (err) {
+          if (err) return console.log(err);
+        });
+      } catch (err) {
+        console.log(err);
+      } finally {
+        console.log("log file created");
+        const db = client.db("test");
+        let collection = db.collection("students");
+        await collection.deleteMany();
+        console.log("Student Collection Cleared");
+        client.close();
+      }
+    }
+  }
 
-        try {
+  //updates a student document based on name atm
+  //needs to be supplied with all fields for everything to update
+  async updateStudent(
+    namein,
+    fullage,
+    curloc,
+    phone,
+    url,
+    dropoffAM,
+    dropoffPM
+  ) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-            const db = client.db("test");
-
-            let collection = db.collection('students');
-
-            let query = { name: namein }
-
-            let update = { name: namein, age: fullage, location: curloc, phonenumber: phone, url: url, dropoffAM: dropoffAM, dropoffPM: dropoffPM }
-
-            let res = await collection.findOneAndReplace(query, update);
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-            console.log("updated " + namein)
-        }
+    if (!client) {
+      return;
     }
 
-    //add administrators
-    //tested works
-    async pushAdmin(namein, fullage, user, password) {
-            const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-                .catch(err => { console.log(err); });
+    try {
+      const db = client.db("test");
 
-            if (!client) {
-                return;
-            }
+      let collection = db.collection("students");
 
-            try {
+      let query = { name: namein };
 
-                const pw = await new pwManage();
+      let update = {
+        name: namein,
+        age: fullage,
+        location: curloc,
+        phonenumber: phone,
+        url: url,
+        dropoffAM: dropoffAM,
+        dropoffPM: dropoffPM,
+      };
 
-                var passHex = await pw.passSet(password);
+      let res = await collection.findOneAndReplace(query, update);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+      console.log("updated " + namein);
+    }
+  }
 
-                const db = client.db("test");
+  //add administrators
+  //tested works
+  async pushAdmin(namein, fullage, user, password) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-                let collection = db.collection('admins');
-
-                let query = { name: namein, age: fullage, username: user, password: passHex }
-
-                let res = await collection.insertOne(query);
-
-                console.log("user added")
-
-            } catch (err) {
-
-                console.log(err);
-            } finally {
-
-                client.close();
-
-            }
-
-
-        }
-        //remove administrators from
-        //tested works
-    async removeAdmin(user) {
-            const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-                .catch(err => { console.log(err); });
-
-            if (!client) {
-                return;
-            }
-
-            try {
-
-                const db = client.db("test");
-
-                let collection = db.collection('admins');
-
-                let query = { user: user }
-
-                let res = await collection.findOneAndDelete(query);
-
-                console.log("Deleted admin")
-
-            } catch (err) {
-
-                console.log(err);
-            } finally {
-
-                client.close();
-            }
-        }
-        //query admins
-        //tested works
-    async findAdmin(user) {
-        var buildstring;
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
-
-        if (!client) {
-            return;
-        }
-
-        try {
-
-            const db = client.db("test");
-
-            let collection = db.collection('admins');
-
-            let query = { user: user }
-
-            let res = await collection.findOne(query);
-
-            buildstring = " Name: " + res.name + " Age: " + res.age; //+ " Phone Number: " + 
-            //res.phonenumber + " url: " + res.url + " First Drop: " + res.dropoffAM
-            // + " Second Drop: " + res.dropoffPM;
-
-            //console.log(buildstring);
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-
-            return buildstring;
-        }
+    if (!client) {
+      return;
     }
 
-    async updateAdmin(namein, fullage, username, password) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const pw = await new pwManage();
 
-        if (!client) {
-            return;
-        }
+      var passHex = await pw.passSet(password);
 
-        try {
+      const db = client.db("test");
 
+      let collection = db.collection("admins");
 
-            const pw = await new pwManage();
+      let query = {
+        name: namein,
+        age: fullage,
+        username: user,
+        password: passHex,
+      };
 
-            var passHex = await pw.passSet(password);
+      let res = await collection.insertOne(query);
 
-            const db = client.db("test");
+      console.log("user added");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+    }
+  }
+  //remove administrators from
+  //tested works
+  async removeAdmin(user) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-            let collection = db.collection('admins');
-
-            let query = { user: user }
-
-            let update = { name: namein, age: fullage, user: username, password: passHex }
-
-            let res = await collection.findOneAndReplace(query, update);
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-            console.log("updated " + namein)
-        }
+    if (!client) {
+      return;
     }
 
-    async adminLogIn(user, password) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const db = client.db("test");
 
-        var passBool
+      let collection = db.collection("admins");
 
-        if (!client) {
-            return;
-        }
+      let query = { user: user };
 
-        try {
+      let res = await collection.findOneAndDelete(query);
 
-            const pw = await new pwManage();
+      console.log("Deleted admin");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+    }
+  }
+  //query admins
+  //tested works
+  async findAdmin(user) {
+    var buildstring;
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-            const db = client.db("test");
-
-            let collection = db.collection('admins');
-
-            let query = { username: user }
-
-            let res = await collection.findOne(query);
-
-            passBool = await pw.validPassword(password, res.password)
-
-
-
-        } catch (err) {
-            passBool = false;
-        } finally {
-
-            client.close();
-            return passBool
-        }
-
+    if (!client) {
+      return;
     }
 
-    //add drivers
-    async pushDriver(fullname, fullage, username, password) {
-            const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-                .catch(err => { console.log(err); });
+    try {
+      const db = client.db("test");
 
-            if (!client) {
-                return;
-            }
+      let collection = db.collection("admins");
 
-            try {
+      let query = { user: user };
 
-                const pw = await new pwManage();
+      let res = await collection.findOne(query);
 
-                var passHex = await pw.passSet(password);
+      buildstring = " Name: " + res.name + " Age: " + res.age; //+ " Phone Number: " +
+      //res.phonenumber + " url: " + res.url + " First Drop: " + res.dropoffAM
+      // + " Second Drop: " + res.dropoffPM;
 
-                const db = client.db("test");
+      //console.log(buildstring);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
 
-                let collection = db.collection('drivers');
+      return buildstring;
+    }
+  }
 
-                let query = { name: fullname, age: fullage, username: username, password: passHex }
+  async updateAdmin(namein, fullage, username, password) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-                let res = await collection.insertOne(query);
-
-                console.log("user added")
-
-            } catch (err) {
-
-                console.log(err);
-            } finally {
-
-                client.close();
-
-            }
-
-
-
-
-        }
-        //remove drivers from
-        //tested works
-    async removeDriver(user) {
-            const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-                .catch(err => { console.log(err); });
-
-            if (!client) {
-                return;
-            }
-
-            try {
-
-                const db = client.db("test");
-
-                let collection = db.collection('drivers');
-
-                let query = { user: user }
-
-                let res = await collection.findOneAndDelete(query);
-
-                console.log("Deleted Driver")
-
-            } catch (err) {
-
-                console.log(err);
-            } finally {
-
-                client.close();
-            }
-        }
-        //query drivers
-        //tested works
-    async findDriver(user) {
-        var buildstring;
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
-
-        if (!client) {
-            return;
-        }
-
-        try {
-
-            const db = client.db("test");
-
-            let collection = db.collection('drivers');
-
-            let query = { user: user }
-
-            let res = await collection.findOne(query);
-
-            buildstring = " Name: " + res.name + " Age: " + res.age; //+ " Phone Number: " + 
-            //res.phonenumber + " url: " + res.url + " First Drop: " + res.dropoffAM
-            // + " Second Drop: " + res.dropoffPM;
-
-            //console.log(buildstring);
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-
-            return buildstring;
-        }
+    if (!client) {
+      return;
     }
 
-    //updates a student document based on name atm
-    //needs to be supplied with all fields for everything to update
-    async updateDriver(namein, fullage, username, password) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const pw = await new pwManage();
 
-        if (!client) {
-            return;
-        }
+      var passHex = await pw.passSet(password);
 
-        try {
+      const db = client.db("test");
 
+      let collection = db.collection("admins");
 
-            const pw = await new pwManage();
+      let query = { user: user };
 
-            var passHex = await pw.passSet(password);
+      let update = {
+        name: namein,
+        age: fullage,
+        user: username,
+        password: passHex,
+      };
 
-            const db = client.db("test");
+      let res = await collection.findOneAndReplace(query, update);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+      console.log("updated " + namein);
+    }
+  }
 
-            let collection = db.collection('drivers');
+  async adminLogIn(user, password) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-            let query = { user: user }
+    var passBool;
 
-            let update = { name: namein, age: fullage, username: username, password: passHex }
-
-            let res = await collection.findOneAndReplace(query, update);
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-            console.log("updated " + namein)
-        }
+    if (!client) {
+      return;
     }
 
-    async driverLogIn(username, password) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const pw = await new pwManage();
 
-        var passBool
+      const db = client.db("test");
 
-        if (!client) {
-            return;
-        }
+      let collection = db.collection("admins");
 
-        try {
+      let query = { username: user };
 
-            const pw = await new pwManage();
+      let res = await collection.findOne(query);
 
-            const db = client.db("test");
+      passBool = await pw.validPassword(password, res.password);
+    } catch (err) {
+      passBool = false;
+    } finally {
+      client.close();
+      return passBool;
+    }
+  }
 
-            let collection = db.collection('drivers');
+  //add drivers
+  async pushDriver(fullname, fullage, username, password) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-            let query = { username: username }
-
-            let res = await collection.findOne(query);
-
-            passBool = await pw.validPassword(password, res.password)
-
-        } catch (err) {
-
-            passBool = false;
-        } finally {
-
-            client.close();
-            return passBool
-        }
-
+    if (!client) {
+      return;
     }
 
-    async parentLogIn(username, password) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+    try {
+      const pw = await new pwManage();
 
-        var passBool
+      var passHex = await pw.passSet(password);
 
-        if (!client) {
-            return;
-        }
+      const db = client.db("test");
 
-        try {
+      let collection = db.collection("drivers");
 
-            const pw = await new pwManage();
+      let query = {
+        name: fullname,
+        age: fullage,
+        username: username,
+        password: passHex,
+      };
 
-            const db = client.db("test");
+      let res = await collection.insertOne(query);
 
-            let collection = db.collection('parents');
-
-            let query = { username: username }
-
-            let res = await collection.findOne(query);
-
-            passBool = await pw.validPassword(password, res.password)
-
-        } catch (err) {
-
-            passBool = false;
-        } finally {
-
-            client.close();
-            return passBool
-        }
-
+      console.log("user added");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
     }
-    async pushParent(username, password, child) {
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
+  }
+  //remove drivers from
+  //tested works
+  async removeDriver(user) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
 
-        if (!client) {
-            return;
-        }
-
-        try {
-
-            const pw = await new pwManage();
-
-            var passHex = await pw.passSet(password);
-
-            const db = client.db("test");
-
-            let collection = db.collection('parent');
-
-            let query = { username: username, password: passHex, child: child }
-
-            let res = await collection.insertOne(query);
-
-            console.log("user added")
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-
-        }
-
-
-
-
-    }
-    async findStudentFromParent(user) {
-        var buildstring;
-        const client = await MongoClient.connect(config.DB_URI, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
-
-        if (!client) {
-            return;
-        }
-
-        try {
-
-            const db = client.db("test");
-
-            let collection = db.collection('parent');
-
-            let query = { username: user }
-
-            let res = await collection.findOne(query);
-
-        } catch (err) {
-
-            console.log(err);
-        } finally {
-
-            client.close();
-
-            return res.child;
-        }
+    if (!client) {
+      return;
     }
 
+    try {
+      const db = client.db("test");
 
+      let collection = db.collection("drivers");
+
+      let query = { user: user };
+
+      let res = await collection.findOneAndDelete(query);
+
+      console.log("Deleted Driver");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+    }
+  }
+  //query drivers
+  //tested works
+  async findDriver(user) {
+    var buildstring;
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const db = client.db("test");
+
+      let collection = db.collection("drivers");
+
+      let query = { user: user };
+
+      let res = await collection.findOne(query);
+
+      buildstring = " Name: " + res.name + " Age: " + res.age; //+ " Phone Number: " +
+      //res.phonenumber + " url: " + res.url + " First Drop: " + res.dropoffAM
+      // + " Second Drop: " + res.dropoffPM;
+
+      //console.log(buildstring);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+
+      return buildstring;
+    }
+  }
+
+  //updates a student document based on name atm
+  //needs to be supplied with all fields for everything to update
+  async updateDriver(namein, fullage, username, password) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const pw = await new pwManage();
+
+      var passHex = await pw.passSet(password);
+
+      const db = client.db("test");
+
+      let collection = db.collection("drivers");
+
+      let query = { user: user };
+
+      let update = {
+        name: namein,
+        age: fullage,
+        username: username,
+        password: passHex,
+      };
+
+      let res = await collection.findOneAndReplace(query, update);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+      console.log("updated " + namein);
+    }
+  }
+
+  async driverLogIn(username, password) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    var passBool;
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const pw = await new pwManage();
+
+      const db = client.db("test");
+
+      let collection = db.collection("drivers");
+
+      let query = { username: username };
+
+      let res = await collection.findOne(query);
+
+      passBool = await pw.validPassword(password, res.password);
+    } catch (err) {
+      passBool = false;
+    } finally {
+      client.close();
+      return passBool;
+    }
+  }
+
+  async parentLogIn(username, password) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    var passBool;
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const pw = await new pwManage();
+
+      const db = client.db("test");
+
+      let collection = db.collection("parents");
+
+      let query = { username: username };
+
+      let res = await collection.findOne(query);
+
+      passBool = await pw.validPassword(password, res.password);
+    } catch (err) {
+      passBool = false;
+    } finally {
+      client.close();
+      return passBool;
+    }
+  }
+  async pushParent(username, password, child) {
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const pw = await new pwManage();
+
+      var passHex = await pw.passSet(password);
+
+      const db = client.db("test");
+
+      let collection = db.collection("parent");
+
+      let query = { username: username, password: passHex, child: child };
+
+      let res = await collection.insertOne(query);
+
+      console.log("user added");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+    }
+  }
+  async findStudentFromParent(user) {
+    var buildstring;
+    const client = await MongoClient.connect(config.DB_URI, {
+      useNewUrlParser: true,
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const db = client.db("test");
+
+      let collection = db.collection("parent");
+
+      let query = { username: user };
+
+      let res = await collection.findOne(query);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      client.close();
+
+      return res.child;
+    }
+  }
 }
 module.exports = Database;
