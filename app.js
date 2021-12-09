@@ -249,7 +249,8 @@ const https = require("https");
 app.set("views", path.join(__dirname, "/src/views/ejsfiles"));
 app.set("view engine", "ejs");
 app.use("/", router);
-//app.listen(3000, () => console.log(" go to http://localhost:3000"));
+
+//folder for static files that need to be accessed on the client side
 app.use(express.static("public"));
 
 https

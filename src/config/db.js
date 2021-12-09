@@ -1,5 +1,3 @@
-//required includes here
-//const mongoose = require('mongoose');
 const config = require("./dev");
 const pwManage = require("./passwordmanage");
 const MongoClient = require("mongodb").MongoClient;
@@ -7,26 +5,9 @@ const MongoClient = require("mongodb").MongoClient;
 const fs = require("fs");
 //test includes here
 
-//notes
-//updating / updated all functions to be asynchronous
-//need to make push students asynchronous *DONE*
-//need to make list provide a clean string list that can be outputed *done*
-//need to make the push to log file then clean collection *done* //maybe move to pushing json files
-//need to add update info for all the above driver / student *done* / admin
-//need to think about changing admin and driver data formats to make everything cleaner *done*
-//need to think about how to save username and passwords *done*
-//user clean text *done*
-//passwords ?? some type on encryption not a live service atm so no big deal?*done*
-
 class Database {
   constructor() {}
 
-  //push students
-  //js you cannot overload functions
-  //but you can leave options out and the DB will push successfully
-  //only issue is if for some reason you had a dropoff in PM and not AM you decided to drop
-  //which one so maybe just first dropoff then second?
-  //issues solved move to asynch with new functions structure :D
   async pushStudent(
     fullname,
     fullage,
@@ -71,9 +52,6 @@ class Database {
     }
   }
 
-  //remove students from
-  //this needs working on and not complete throws error *fixed*
-  //will look into i am assuming has to do with call *fixed*
   async removeStudent(namein) {
     const client = await MongoClient.connect(config.DB_URI, {
       useNewUrlParser: true,
@@ -102,8 +80,6 @@ class Database {
     }
   }
 
-  //query singular student
-  //tested works
   async findStudent(namein) {
     var buildstring;
     const client = await MongoClient.connect(config.DB_URI, {
@@ -134,8 +110,6 @@ class Database {
         dropoffAM: doc.dropoffAM,
         dropoffPM: doc.dropoffPM,
       };
-
-      //console.log(buildstring);
     } catch (err) {
       console.log(err);
     } finally {
@@ -144,15 +118,6 @@ class Database {
       return obj;
     }
   }
-
-  //
-  //query all student
-  //this will flash a json file at you probably best to put into a string t
-  //then parse a json will need to work on this a big becuase should be able
-  //to change how it exports data into nice lines need to look into it
-  //changed to formatting nicely instead of dumping documents
-  //calls to allstudentquery must be made async
-  //returns an object
 
   async allStudentQuery() {
     var buildstring = "";
@@ -252,7 +217,7 @@ class Database {
     }
   }
 
-  //updates a student document based on name atm
+  //updates a student document based on name 
   //needs to be supplied with all fields for everything to update
   async updateStudent(
     namein,
@@ -300,7 +265,7 @@ class Database {
   }
 
   //add administrators
-  //tested works
+
   async pushAdmin(namein, fullage, user, password) {
     const client = await MongoClient.connect(config.DB_URI, {
       useNewUrlParser: true,
@@ -367,7 +332,7 @@ class Database {
     }
   }
   //query admins
-  //tested works
+
   async findAdmin(user) {
     var buildstring;
     const client = await MongoClient.connect(config.DB_URI, {
@@ -511,8 +476,7 @@ class Database {
       client.close();
     }
   }
-  //remove drivers from
-  //tested works
+  //remove drivers 
   async removeDriver(user) {
     const client = await MongoClient.connect(config.DB_URI, {
       useNewUrlParser: true,

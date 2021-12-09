@@ -1,9 +1,7 @@
 //manager for passwords for database
-// crypto module
+
 const crypto = require("crypto");
 
-//password stuff
-//work via magic of cryptography
 
 class pwManage {
   async passSet(password) {
